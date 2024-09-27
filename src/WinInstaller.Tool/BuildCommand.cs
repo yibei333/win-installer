@@ -187,6 +187,9 @@ public class BuildCommand : ICommand
         var process = new Process
         {
             StartInfo = new ProcessStartInfo("dotnet", $"build -c Release {tempFolder}")
+            {
+                RedirectStandardOutput = true,
+            }
         };
         process.OutputDataReceived += (s, e) => console.WriteInformation(e.Data);
         process.Start();
@@ -212,6 +215,9 @@ public class BuildCommand : ICommand
         var process = new Process
         {
             StartInfo = new ProcessStartInfo("dotnet", "tool list -g")
+            {
+                RedirectStandardOutput = true,
+            }
         };
         process.OutputDataReceived += (s, e) => toolList.Add(e.Data);
         process.Start();
@@ -222,6 +228,9 @@ public class BuildCommand : ICommand
             process = new Process
             {
                 StartInfo = new ProcessStartInfo("dotnet", "tool update -g single-exe")
+                {
+                    RedirectStandardOutput = true,
+                }
             };
             process.OutputDataReceived += (s, e) => console.WriteInformation(e.Data);
             process.Start();
@@ -233,6 +242,9 @@ public class BuildCommand : ICommand
             process = new Process
             {
                 StartInfo = new ProcessStartInfo("dotnet", "tool install -g single-exe")
+                {
+                    RedirectStandardOutput = true,
+                }
             };
             process.OutputDataReceived += (s, e) => console.WriteInformation(e.Data);
             process.Start();
