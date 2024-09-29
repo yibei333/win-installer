@@ -1,20 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using WinInstaller.Pages;
 
 namespace WinInstaller
 {
@@ -23,11 +12,15 @@ namespace WinInstaller
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static MainWindow Instance { get; private set; }
+
         public MainViewModel ViewModel { get; set; } = new MainViewModel();
 
         public MainWindow()
         {
             InitializeComponent();
+            SetPage<LicensePage>();
+            Instance = this;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -48,6 +41,11 @@ namespace WinInstaller
         {
             Close();
         }
+
+        public void SetPage<TPage>() where TPage : Page, new()
+        {
+            ViewModel.Page = new TPage();
+        }
     }
 
     public partial class MainViewModel : ObservableObject
@@ -56,16 +54,6 @@ namespace WinInstaller
         bool _running;
 
         [ObservableProperty]
-        string _name;
-
-        [RelayCommand]
-        public async Task Change()
-        {
-            Running = true;
-            await Task.Yield();
-            await Task.Delay(5000);
-            Name += "Changed";
-            Running = false;
-        }
+        Page _page;
     }
 }

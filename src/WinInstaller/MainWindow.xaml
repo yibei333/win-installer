@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:WinInstaller"
         mc:Ignorable="d"
         Title="MainWindow" 
-        Height="450" Width="800"
+        Height="300" Width="500"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
@@ -16,32 +16,56 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=ViewModel}"
         xmlns:hc="https://handyorg.github.io/handycontrol">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="50"></WindowChrome>
+        <WindowChrome CaptionHeight="36"></WindowChrome>
     </WindowChrome.WindowChrome>
-    <Grid Background="#99FFFFFF">
+    <Grid Background="#DDFFFFFF">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid Height="50" Background="{StaticResource BackgroundBrush}">
+        <Grid Height="36" Background="{StaticResource BackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
-                <Image Height="32" Source="favicon.ico"/>
-                <TextBlock Margin="6 0" VerticalAlignment="Center">MainWindow</TextBlock>
+                <Image Height="24" Margin="6 0" Source="favicon.ico"/>
+                <TextBlock VerticalAlignment="Center">MainWindow</TextBlock>
             </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6 0">
-                <Button Margin="6 0" WindowChrome.IsHitTestVisibleInChrome="True" Click="Window_Minimal">-</Button>
-                <Button WindowChrome.IsHitTestVisibleInChrome="True" Click="Window_Close">x</Button>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button WindowChrome.IsHitTestVisibleInChrome="True" 
+                        Margin="6 0" 
+                        Padding="12"
+                        Click="Window_Minimal"
+                        Background="{StaticResource BackgroundBrush}"
+                        Style="{StaticResource ButtonCustom}"
+                        Foreground="Black"
+                        hc:BackgroundSwitchElement.MouseHoverBackground="#AAFFFFFF"
+                        hc:BackgroundSwitchElement.MouseDownBackground="White" >
+                    <Path Fill="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}},Path=Foreground}"
+                          Stretch="Uniform" 
+                          Data="{StaticResource WindowMinGeometry}"/>
+                </Button>
+                <Button WindowChrome.IsHitTestVisibleInChrome="True" 
+                        Padding="12"
+                        Click="Window_Close" 
+                        IsEnabled="{Binding Running,Converter={StaticResource Boolean2BooleanReConverter}}"
+                        Style="{StaticResource ButtonCustom}" 
+                        Background="{StaticResource BackgroundBrush}"
+                        Foreground="Black"
+                        hc:BackgroundSwitchElement.MouseHoverBackground="{StaticResource DangerBrush}" 
+                        hc:BackgroundSwitchElement.MouseDownBackground="{StaticResource DarkDangerBrush}"
+                        local:ButtonForegroundAttach.HoverForeground="White"
+                        local:ButtonForegroundAttach.PressForeground="White"
+                        hc:IconElement.Geometry="{StaticResource CloseGeometry}">
+                    <Path Fill="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}},Path=Foreground}"
+                          Stretch="Uniform" 
+                          Data="{StaticResource CloseGeometry}"/>
+                </Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Margin="6">
-            <StackPanel>
-                <TextBox Text="{Binding Name}"/>
-                <Button Command="{Binding ChangeCommand}" Style="{StaticResource ButtonPrimary}">change</Button>
-            </StackPanel>
+            <Frame NavigationUIVisibility="Hidden" Content="{Binding Page}"/>
         </Grid>
     </Grid>
 </Window>

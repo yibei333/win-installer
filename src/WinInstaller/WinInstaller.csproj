@@ -8,8 +8,6 @@
 		<LangVersion>10</LangVersion>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
 		<AssemblyName>win-installer</AssemblyName>
-		<DebugType>none</DebugType>
-		<GenerateSupportedRuntime>False</GenerateSupportedRuntime>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,5 +21,17 @@
 
 	<ItemGroup>
 	  <Resource Include="favicon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Pages\CompletePage.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="Pages\InstallPage.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="Pages\PreRequestPage.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
 	</ItemGroup>
 </Project>
