@@ -54,10 +54,8 @@
 		<EmbeddedResource Include="..\WinInstaller\**\*" Link="Template\$([System.String]::new('%(RelativeDir)').Replace('..\WinInstaller',''))%(FileName)%(Extension)" Exclude="..\WinInstaller\bin\**\*;..\WinInstaller\obj\**\*">
 			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
 		</EmbeddedResource>
+		<EmbeddedResource Include="PreRequests\**\*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Extensions\" />
-	</ItemGroup>
-
 </Project>

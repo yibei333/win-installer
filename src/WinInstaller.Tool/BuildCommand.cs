@@ -6,7 +6,6 @@ using WinInstaller.Tool.Extensions;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
-using System.Text;
 
 namespace WinInstaller.Tool;
 
@@ -53,19 +52,10 @@ public class BuildCommand : ICommand
     public string IconPath { get; set; }
 
     /// <summary>
-    /// ovveride tostring
+    /// pre-requests
     /// </summary>
-    /// <returns>string</returns>
-    public override string ToString()
-    {
-        var builder = new StringBuilder();
-        var properties = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-        foreach (var property in properties)
-        {
-            builder.AppendLine($"{property.Name}={property.GetValue(this)}");
-        }
-        return builder.ToString();
-    }
+    [CommandOption("pre-requests", 'p', IsRequired = false, Description = "安装前需要执行的应用程序,支持格式:exe,cmd,bat")]
+    public string[] PreRequests { get; set; }
 
     /// <summary>
     /// build
@@ -118,6 +108,7 @@ public class BuildCommand : ICommand
         var tempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"WinInstaller\\{Name}\\{AppVersion}");
         tempFolder.CreateDirectoryIfNotExist();
         CopyProjectFiles(console, tempFolder);
+        CopyPreRequestFiles(console, tempFolder);
         ReplaceProjectInformation(tempFolder);
         return tempFolder;
     }
@@ -125,7 +116,7 @@ public class BuildCommand : ICommand
     static void CopyProjectFiles(IConsole console, string tempFolder)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        var names = assembly.GetManifestResourceNames().ToList();
+        var names = assembly.GetManifestResourceNames().Where(x => x.StartsWith("..\\WinInstaller")).ToList();
 
         foreach (var name in names)
         {
@@ -139,6 +130,43 @@ public class BuildCommand : ICommand
                 stream.Dispose();
             }
         }
+    }
+
+    void CopyPreRequestFiles(IConsole console, string tempFolder)
+    {
+        if (PreRequests.IsNullOrEmpty()) return;
+
+        var folder = tempFolder.CombinePath("PreRequests");
+        folder.CreateDirectoryIfNotExist();
+        var assembly = Assembly.GetExecutingAssembly();
+        var assemblyName = assembly.GetName().Name;
+
+        PreRequests.ForEach(x =>
+        {
+            console.WriteInformation($"准备文件:{x}");
+            if (x == "System-Webview2Runtime")
+            {
+                var stream = assembly.GetManifestResourceStream($"PreRequests\\Webview2Runtime.exe");
+                var path = folder.CombinePath("Webview2Runtime.exe");
+                stream.SaveToFile(path);
+                stream.Dispose();
+            }
+            else if (x == "System-Test")
+            {
+                var stream = assembly.GetManifestResourceStream($"PreRequests\\Test.cmd");
+                var path = folder.CombinePath("Test.cmd");
+                stream.SaveToFile(path);
+                stream.Dispose();
+            }
+            else
+            {
+                var fileInfo = new FileInfo(x);
+                var stream = fileInfo.OpenOrCreate();
+                var path = folder.CombinePath(fileInfo.Name);
+                stream.SaveToFile(path);
+                stream.Dispose();
+            }
+        });
     }
 
     void ReplaceProjectInformation(string tempFolder)

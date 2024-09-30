@@ -13,17 +13,19 @@
         AllowsTransparency="True"
         Background="Transparent"
         ResizeMode="CanMinimize"
+        BorderThickness="1"
+        BorderBrush="#CCC"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=ViewModel}"
         xmlns:hc="https://handyorg.github.io/handycontrol">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="36"></WindowChrome>
     </WindowChrome.WindowChrome>
-    <Grid Background="#DDFFFFFF">
+    <Grid Background="#DDEEEEEE">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid Height="36" Background="{StaticResource BackgroundBrush}">
+        <Grid Height="36" Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -37,11 +39,11 @@
                         Margin="6 0" 
                         Padding="12"
                         Click="Window_Minimal"
-                        Background="{StaticResource BackgroundBrush}"
+                        Background="White"
                         Style="{StaticResource ButtonCustom}"
                         Foreground="Black"
-                        hc:BackgroundSwitchElement.MouseHoverBackground="#AAFFFFFF"
-                        hc:BackgroundSwitchElement.MouseDownBackground="White" >
+                        hc:BackgroundSwitchElement.MouseHoverBackground="#EEE"
+                        hc:BackgroundSwitchElement.MouseDownBackground="#DDD" >
                     <Path Fill="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}},Path=Foreground}"
                           Stretch="Uniform" 
                           Data="{StaticResource WindowMinGeometry}"/>
@@ -51,7 +53,7 @@
                         Click="Window_Close" 
                         IsEnabled="{Binding Running,Converter={StaticResource Boolean2BooleanReConverter}}"
                         Style="{StaticResource ButtonCustom}" 
-                        Background="{StaticResource BackgroundBrush}"
+                        Background="White"
                         Foreground="Black"
                         hc:BackgroundSwitchElement.MouseHoverBackground="{StaticResource DangerBrush}" 
                         hc:BackgroundSwitchElement.MouseDownBackground="{StaticResource DarkDangerBrush}"
@@ -65,7 +67,7 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Margin="6">
-            <Frame NavigationUIVisibility="Hidden" Content="{Binding Page}"/>
+            <Frame NavigationUIVisibility="Hidden" Content="{Binding Page}" BorderThickness="0"/>
         </Grid>
     </Grid>
 </Window>
