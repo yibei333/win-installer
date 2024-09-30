@@ -5,10 +5,23 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WinInstaller.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="CompletePage">
+      d:DesignHeight="450" d:DesignWidth="800" d:Background="White"
+      Title="CompletePage"
+      DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=ViewModel}">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Background="{StaticResource LightSuccessBrush}">
+            <TextBlock FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center">安装完成</TextBlock>
+        </Grid>
+        <CheckBox Grid.Row="1" Content="立即运行" IsChecked="{Binding Run}"/>
+        <Button Grid.Row="2" 
+                Content="关闭"
+                Style="{StaticResource ButtonPrimary}"
+                Command="{Binding ExecuteCommand}"/>
     </Grid>
 </Page>

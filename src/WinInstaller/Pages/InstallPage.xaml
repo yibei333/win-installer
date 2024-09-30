@@ -6,9 +6,47 @@
       xmlns:local="clr-namespace:WinInstaller.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800" d:Background="White"
-      Title="InstallPage">
+      Title="InstallPage"
+      DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=ViewModel}">
 
     <Grid>
-        <TextBlock>install</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock>选择安装位置(不要选择需要提升权限的位置,如'C:\Windows')</TextBlock>
+        <Grid Grid.Row="1" Margin="0 6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding Location}"/>
+            <Button Grid.Column="1" 
+                    Content="选择" 
+                    Style="{StaticResource ButtonDefault}"
+                    Margin="6 0 0 0"
+                    Command="{Binding SelectPathCommand}"/>
+        </Grid>
+        <ProgressBar Grid.Row="2" 
+                     Minimum="0" 
+                     Maximum="100" 
+                     Value="{Binding Progress}" 
+                     Height="20"/>
+        <TextBox Grid.Row="3"
+                 Margin="0 6"
+                 TextWrapping="Wrap"
+                 IsReadOnly="True"
+                 HorizontalContentAlignment="Left"
+                 VerticalContentAlignment="Top"
+                 Text="{Binding Log}"
+                 Padding="6"/>
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="安装"
+                    Command="{Binding InstallCommand}"
+                    Style="{StaticResource ButtonPrimary}"/>
+        </StackPanel>
     </Grid>
 </Page>

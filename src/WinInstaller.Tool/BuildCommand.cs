@@ -2,10 +2,10 @@
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using SharpDevLib;
-using WinInstaller.Tool.Extensions;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
+using WinInstaller.Tool.Extensions;
 
 namespace WinInstaller.Tool;
 

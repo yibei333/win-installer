@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SharpDevLib;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using WinInstaller.Extensions;
 
 namespace WinInstaller.Pages
 {
@@ -20,9 +14,41 @@ namespace WinInstaller.Pages
     /// </summary>
     public partial class CompletePage : Page
     {
+        public CompeleteViewModel ViewModel { get; set; } = new CompeleteViewModel();
+
         public CompletePage()
         {
             InitializeComponent();
+        }
+    }
+
+    public partial class CompeleteViewModel : ObservableObject
+    {
+        [ObservableProperty]
+        bool _run;
+
+        [RelayCommand]
+        public async Task Execute()
+        {
+            await Task.Yield();
+
+            if (Run)
+            {
+                var exe = RegistryExtension.Get().CombinePath(App.EntryPoint);
+                if (File.Exists(exe))
+                {
+                    var process = new Process
+                    {
+                        StartInfo = new ProcessStartInfo(exe)
+                        {
+                            WorkingDirectory = new FileInfo(exe).DirectoryName,
+                        }
+                    };
+                    process.Start();
+                }
+            }
+            Application.Current.Shutdown();
+            await Task.CompletedTask;
         }
     }
 }
