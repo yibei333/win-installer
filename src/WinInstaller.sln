@@ -5,7 +5,13 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinInstaller.Tool", "WinInstaller.Tool\WinInstaller.Tool.csproj", "{CD402FB1-9029-4D45-8BCB-0F287AFF6E1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinInstaller", "WinInstaller\WinInstaller.csproj", "{90D52C74-DCA8-425B-99C9-359092B7EA3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinInstaller", "WinInstaller\WinInstaller.csproj", "{90D52C74-DCA8-425B-99C9-359092B7EA3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinInstaller.Launcher", "WinInstaller.Launcher\WinInstaller.Launcher.csproj", "{E3B865AF-0C90-4178-83FF-FC7FD4B5B9AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinInstaller.Updater", "WinInstaller.Updater\WinInstaller.Updater.csproj", "{C2FC863A-4071-4C0E-8074-16C14B6898EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinInstaller.Uninstaller", "WinInstaller.Uninstaller\WinInstaller.Uninstaller.csproj", "{1958F167-9BDE-4633-BEFF-B5909B6298F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +27,23 @@ Global
 		{90D52C74-DCA8-425B-99C9-359092B7EA3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90D52C74-DCA8-425B-99C9-359092B7EA3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90D52C74-DCA8-425B-99C9-359092B7EA3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3B865AF-0C90-4178-83FF-FC7FD4B5B9AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B865AF-0C90-4178-83FF-FC7FD4B5B9AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B865AF-0C90-4178-83FF-FC7FD4B5B9AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B865AF-0C90-4178-83FF-FC7FD4B5B9AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2FC863A-4071-4C0E-8074-16C14B6898EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2FC863A-4071-4C0E-8074-16C14B6898EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2FC863A-4071-4C0E-8074-16C14B6898EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2FC863A-4071-4C0E-8074-16C14B6898EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1958F167-9BDE-4633-BEFF-B5909B6298F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1958F167-9BDE-4633-BEFF-B5909B6298F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1958F167-9BDE-4633-BEFF-B5909B6298F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1958F167-9BDE-4633-BEFF-B5909B6298F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3BE1AD7B-5E4B-4F43-A2AD-6B69B44AF473}
 	EndGlobalSection
 EndGlobal

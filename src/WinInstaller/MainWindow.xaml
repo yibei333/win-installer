@@ -5,6 +5,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinInstaller"
+        xmlns:pages="clr-namespace:WinInstaller.Pages"
+        xmlns:attaches="clr-namespace:WinInstaller.Attaches"
         mc:Ignorable="d"
         Title="MainWindow" 
         Height="300" Width="500"
@@ -20,7 +22,7 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="36"></WindowChrome>
     </WindowChrome.WindowChrome>
-    <Grid Background="#DDEEEEEE">
+    <Grid Background="{StaticResource LightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -57,8 +59,8 @@
                         Foreground="Black"
                         hc:BackgroundSwitchElement.MouseHoverBackground="{StaticResource DangerBrush}" 
                         hc:BackgroundSwitchElement.MouseDownBackground="{StaticResource DarkDangerBrush}"
-                        local:ButtonForegroundAttach.HoverForeground="White"
-                        local:ButtonForegroundAttach.PressForeground="White"
+                        attaches:ButtonForegroundAttach.HoverForeground="{StaticResource LightBrush}"
+                        attaches:ButtonForegroundAttach.PressForeground="{StaticResource LightBrush}"
                         hc:IconElement.Geometry="{StaticResource CloseGeometry}">
                     <Path Fill="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Button}},Path=Foreground}"
                           Stretch="Uniform" 
@@ -67,7 +69,9 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Margin="6">
-            <Frame NavigationUIVisibility="Hidden" Content="{Binding Page}" BorderThickness="0"/>
+            <ContentControl d:Content="{d:DesignInstance Type={x:Type pages:CompletePage},IsDesignTimeCreatable=True}" 
+                            Content="{Binding Page}"
+                            BorderThickness="0"/>
         </Grid>
     </Grid>
 </Window>

@@ -1,4 +1,4 @@
-﻿<Page x:Class="WinInstaller.Pages.LicensePage"
+﻿<UserControl x:Class="WinInstaller.Pages.LicensePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       d:Background="White"
-      Title="LicensePage"
       xmlns:hc="https://handyorg.github.io/handycontrol"
       DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=ViewModel}">
     <Grid>
@@ -25,6 +24,7 @@
                  TextWrapping="Wrap" 
                  Padding="6"
                  Text="{Binding License}"
+                 d:Text="some license"
                  TextAlignment="Left"
                  VerticalContentAlignment="Top"/>
         <Grid Grid.Row="2">
@@ -42,4 +42,4 @@
                     Click="Next"/>
         </Grid>
     </Grid>
-</Page>
+</UserControl>

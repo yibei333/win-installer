@@ -5,10 +5,7 @@ using System.Windows.Controls;
 
 namespace WinInstaller.Pages
 {
-    /// <summary>
-    /// Interaction logic for LicensePage.xaml
-    /// </summary>
-    public partial class LicensePage : Page
+    public partial class LicensePage : UserControl
     {
         public LicenseViewModel ViewModel { get; set; } = new LicenseViewModel();
 

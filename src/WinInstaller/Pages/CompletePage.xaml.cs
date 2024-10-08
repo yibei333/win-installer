@@ -12,7 +12,7 @@ namespace WinInstaller.Pages
     /// <summary>
     /// Interaction logic for LicensePage.xaml
     /// </summary>
-    public partial class CompletePage : Page
+    public partial class CompletePage : UserControl
     {
         public CompeleteViewModel ViewModel { get; set; } = new CompeleteViewModel();
 
@@ -25,7 +25,7 @@ namespace WinInstaller.Pages
     public partial class CompeleteViewModel : ObservableObject
     {
         [ObservableProperty]
-        bool _run;
+        bool _run = true;
 
         [RelayCommand]
         public async Task Execute()

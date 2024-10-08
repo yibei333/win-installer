@@ -9,10 +9,7 @@ using System.Windows.Controls;
 
 namespace WinInstaller.Pages
 {
-    /// <summary>
-    /// Interaction logic for LicensePage.xaml
-    /// </summary>
-    public partial class PreRequestPage : Page
+    public partial class PreRequestPage : UserControl
     {
         public PreRequestViewModel ViewModel { get; set; } = new PreRequestViewModel();
 
@@ -97,9 +94,20 @@ namespace WinInstaller.Pages
                     StartInfo = new ProcessStartInfo(path)
                     {
                         WorkingDirectory = new FileInfo(path).DirectoryName,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
                     }
                 };
+                process.OutputDataReceived += (sender, e) => WriteLog(e.Data);
+                process.ErrorDataReceived += (sender, e) =>
+                {
+                    if (!string.IsNullOrWhiteSpace(e.Data)) WriteLog($"发生错误:{e.Data}");
+                };
                 process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
                 process.WaitForExit();
                 if (process.ExitCode != 0) throw new Exception($"{x.Name}执行失败");
                 x.SetStaus("执行成功");
@@ -115,6 +123,11 @@ namespace WinInstaller.Pages
 
     public partial class IdNameStatus : ObservableObject
     {
+        public IdNameStatus()
+        {
+
+        }
+
         [ObservableProperty]
         int _id;
 

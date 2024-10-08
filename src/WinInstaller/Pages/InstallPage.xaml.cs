@@ -11,10 +11,7 @@ using WinInstaller.Extensions;
 
 namespace WinInstaller.Pages
 {
-    /// <summary>
-    /// Interaction logic for LicensePage.xaml
-    /// </summary>
-    public partial class InstallPage : Page
+    public partial class InstallPage : UserControl
     {
         public InstallViewModel ViewModel { get; set; } = new InstallViewModel();
 
@@ -42,8 +39,6 @@ namespace WinInstaller.Pages
         string _location;
 
         string ExePath => Location.CombinePath(App.EntryPoint);
-
-        string FileListPath => Location.CombinePath("app.file.list");
 
         [RelayCommand]
         async Task SelectPath()
@@ -118,16 +113,23 @@ namespace WinInstaller.Pages
             stream.SaveToFile(zipPath);
             stream.Close();
 
+            var lastName = string.Empty;
             await new DeCompressOption(zipPath, Location)
             {
                 OnProgress = (e) =>
                 {
-                    Log += $"{e.CurrentName}\r\n";
+                    if (lastName == e.CurrentName) return;
+                    lastName = e.CurrentName;
+                    Log += $"复制文件:{e.CurrentName}\r\n";
                     Progress = e.Progress;
-                    size += e.Handled;
-                }
+                    size = e.Total;
+                },
             }.DeCompressAsync();
-            RegistryExtension.SetSystemSizeInformation((int)size / 1024);
+            RegistryExtension.SetSystemSizeInformation((int)size / (1024));
+
+#if DEBUG
+            await Task.Delay(3000);
+#endif
 
             //todo
             //upgrader

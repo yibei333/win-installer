@@ -71,6 +71,7 @@ public class BuildCommand : ICommand
             PrepareBinaryFiles(console, tempFolder);
             BuildProject(console, tempFolder);
             CreateSingleExe(console, tempFolder);
+            Clean(tempFolder);
         }
         catch (Exception ex)
         {
@@ -105,7 +106,7 @@ public class BuildCommand : ICommand
 
     string PrepareProject(IConsole console)
     {
-        var tempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"WinInstaller\\{Name}\\{AppVersion}");
+        var tempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"WinInstaller\\{Name}");
         tempFolder.CreateDirectoryIfNotExist();
         CopyProjectFiles(console, tempFolder);
         CopyPreRequestFiles(console, tempFolder);
@@ -173,9 +174,9 @@ public class BuildCommand : ICommand
     {
         var appXamlCs = tempFolder.CombinePath("App.xaml.cs");
         var appXamlText = File.ReadAllText(appXamlCs);
-        appXamlText = appXamlText.Replace("Name = \"SampleApp\"", $"Name = \"{Name}\"");
+        appXamlText = appXamlText.Replace("Name = \"SampleApp.WpfApp\"", $"Name = \"{Name}\"");
         appXamlText = appXamlText.Replace("Version = \"1.0.0\"", $"Version = \"{AppVersion}\"");
-        appXamlText = appXamlText.Replace("EntryPoint = \"SampleApp.exe\"", $"EntryPoint = \"{EntrypointPath}\"");
+        appXamlText = appXamlText.Replace("EntryPoint = \"SampleApp.WpfApp.exe\"", $"EntryPoint = \"{EntrypointPath}\"");
         File.WriteAllText(appXamlCs, appXamlText);
 
         var csproj = tempFolder.CombinePath("WinInstaller.csproj");
@@ -230,7 +231,7 @@ public class BuildCommand : ICommand
 
         var process = new Process
         {
-            StartInfo = new ProcessStartInfo("single-exe", $"-b {tempFolder.CombinePath($"bin\\Release\\net472")} -e {Name}.exe -o {Output} -n {Name}")
+            StartInfo = new ProcessStartInfo("single-exe", $"-b {tempFolder.CombinePath($"bin\\Release\\net472")} -e {Name}.exe -o {Output} -n {Name}.Setup")
         };
         process.OutputDataReceived += (s, e) => console.WriteInformation(e.Data);
         process.Start();
@@ -239,6 +240,7 @@ public class BuildCommand : ICommand
 
     static void EnsureSingleExeToolInstalled(IConsole console)
     {
+        console.WriteInformation("安装工具:single-exe");
         var toolList = new List<string>();
         var process = new Process
         {
@@ -249,6 +251,7 @@ public class BuildCommand : ICommand
         };
         process.OutputDataReceived += (s, e) => toolList.Add(e.Data);
         process.Start();
+        process.BeginOutputReadLine();
         process.WaitForExit();
 
         if (toolList.Any(x => x.StartsWith("single-exe ")))
@@ -262,6 +265,7 @@ public class BuildCommand : ICommand
             };
             process.OutputDataReceived += (s, e) => console.WriteInformation(e.Data);
             process.Start();
+            process.BeginOutputReadLine();
             process.WaitForExit();
             if (process.ExitCode != 0) throw new Exception("安装single-exe工具失败");
         }
@@ -276,8 +280,16 @@ public class BuildCommand : ICommand
             };
             process.OutputDataReceived += (s, e) => console.WriteInformation(e.Data);
             process.Start();
+            process.BeginOutputReadLine();
             process.WaitForExit();
             if (process.ExitCode != 0) throw new Exception("安装single-exe工具失败");
         }
+    }
+
+    static void Clean(string tempFolder)
+    {
+        if (Directory.Exists(tempFolder)) Directory.Delete(tempFolder, true);
+        var parent = new DirectoryInfo(tempFolder).Parent;
+        if (parent != null && parent.GetDirectories().IsNullOrEmpty() && parent.GetFiles().IsNullOrEmpty()) parent.Delete(true);
     }
 }

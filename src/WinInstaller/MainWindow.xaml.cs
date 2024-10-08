@@ -41,9 +41,9 @@ namespace WinInstaller
             Close();
         }
 
-        public void SetPage<TPage>() where TPage : Page, new()
+        public void SetPage<TPage>() where TPage : UserControl, new()
         {
-            ViewModel.Page = new TPage();
+            Dispatcher.Invoke(() => ViewModel.Page = new TPage());
         }
     }
 
@@ -53,6 +53,6 @@ namespace WinInstaller
         bool _running;
 
         [ObservableProperty]
-        Page _page;
+        UserControl _page;
     }
 }
