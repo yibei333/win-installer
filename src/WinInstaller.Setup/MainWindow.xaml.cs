@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using WinInstaller.Pages;
+using WinInstaller.Setup.Pages;
 
-namespace WinInstaller
+namespace WinInstaller.Setup
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

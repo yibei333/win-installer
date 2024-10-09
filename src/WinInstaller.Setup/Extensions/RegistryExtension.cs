@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using SharpDevLib;
 
-namespace WinInstaller.Extensions;
+namespace WinInstaller.Setup.Extensions;
 
 public static class RegistryExtension
 {

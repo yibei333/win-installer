@@ -7,7 +7,7 @@
 		<UseWPF>true</UseWPF>
 		<LangVersion>10</LangVersion>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
-		<AssemblyName>win-installer</AssemblyName>
+		<AssemblyName>setup</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,7 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="System.Windows.Forms" />
+		<Reference Include="System.Windows.Forms" />
 	</ItemGroup>
 
 	<ItemGroup>

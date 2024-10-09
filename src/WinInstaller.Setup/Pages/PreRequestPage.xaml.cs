@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WinInstaller.Pages
+namespace WinInstaller.Setup.Pages
 {
     public partial class PreRequestPage : UserControl
     {

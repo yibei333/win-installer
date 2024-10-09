@@ -51,7 +51,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="..\WinInstaller\**\*" Link="Template\$([System.String]::new('%(RelativeDir)').Replace('..\WinInstaller',''))%(FileName)%(Extension)" Exclude="..\WinInstaller\bin\**\*;..\WinInstaller\obj\**\*">
+		<EmbeddedResource Include="..\WinInstaller.Setup\**\*" Link="Setup\$([System.String]::new('%(RelativeDir)').Replace('..\WinInstaller.Setup',''))%(FileName)%(Extension)" Exclude="..\WinInstaller.Setup\bin\**\*;..\WinInstaller.Setup\obj\**\*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="..\WinInstaller.Uninstaller\**\*" Link="Uninstaller\$([System.String]::new('%(RelativeDir)').Replace('..\WinInstaller.Uninstaller',''))%(FileName)%(Extension)" Exclude="..\WinInstaller.Uninstaller\bin\**\*;..\WinInstaller.Uninstaller\obj\**\*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="..\WinInstaller.Updater\**\*" Link="Updater\$([System.String]::new('%(RelativeDir)').Replace('..\WinInstaller.Updater',''))%(FileName)%(Extension)" Exclude="..\WinInstaller.Updater\bin\**\*;..\WinInstaller.Updater\obj\**\*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="..\WinInstaller.Launcher\**\*" Link="Launcher\$([System.String]::new('%(RelativeDir)').Replace('..\WinInstaller.Launcher',''))%(FileName)%(Extension)" Exclude="..\WinInstaller.Launcher\bin\**\*;..\WinInstaller.Launcher\obj\**\*">
 			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
 		</EmbeddedResource>
 		<EmbeddedResource Include="PreRequests\**\*">

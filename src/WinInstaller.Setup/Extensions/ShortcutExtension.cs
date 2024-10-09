@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace WinInstaller.Extensions;
+namespace WinInstaller.Setup.Extensions;
 
 public static class ShortcutExtension
 {

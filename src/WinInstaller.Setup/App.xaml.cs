@@ -1,10 +1,7 @@
 ﻿using System.Windows;
 
-namespace WinInstaller
+namespace WinInstaller.Setup
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         public const string Name = "SampleApp.WpfApp";

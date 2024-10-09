@@ -1,7 +1,7 @@
-﻿<Application x:Class="WinInstaller.App"
+﻿<Application x:Class="WinInstaller.Setup.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:WinInstaller"
+             xmlns:local="clr-namespace:WinInstaller.Setup"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>

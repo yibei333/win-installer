@@ -5,9 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using WinInstaller.Extensions;
+using WinInstaller.Setup.Extensions;
 
-namespace WinInstaller.Pages
+namespace WinInstaller.Setup.Pages
 {
     /// <summary>
     /// Interaction logic for LicensePage.xaml

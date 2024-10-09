@@ -7,9 +7,9 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using WinInstaller.Extensions;
+using WinInstaller.Setup.Extensions;
 
-namespace WinInstaller.Pages
+namespace WinInstaller.Setup.Pages
 {
     public partial class InstallPage : UserControl
     {
