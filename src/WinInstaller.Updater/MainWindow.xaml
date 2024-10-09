@@ -5,8 +5,214 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinInstaller.Updater"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Height="450" Width="800"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="RedColor" Color="Red"/>
+            <SolidColorBrush x:Key="LightRedColor" Color="OrangeRed"/>
+            <SolidColorBrush x:Key="LightColor" Color="White"/>
+            <SolidColorBrush x:Key="BlueColor" Color="Blue"/>
+            <SolidColorBrush x:Key="LightBlueColor" Color="BlueViolet"/>
+
+            <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <local:BoolToVisibilityReverseConverter x:Key="BoolToVisibilityReverseConverter"/>
+            <local:ItemCountVisibilityConverter x:Key="ItemCountVisibilityConverter"/>
+
+            <Style x:Key="CloseButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="local:ButtonAttach.HoverBackground" Value="{StaticResource RedColor}"/>
+                <Setter Property="local:ButtonAttach.HoverForeground" Value="{StaticResource LightColor}"/>
+                <Setter Property="local:ButtonAttach.PressBackground" Value="{StaticResource LightRedColor}"/>
+                <Setter Property="local:ButtonAttach.PressForeground" Value="{StaticResource LightColor}"/>
+                <Setter Property="local:ButtonAttach.Radius" Value="0"/>
+                <Setter Property="Padding" Value="10"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Width" Value="32"/>
+                <Setter Property="Height" Value="32"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <PathGeometry Figures="M0.7,0 L5,4.3 L9.3,0 L10,0.7 L5.7,5 L10,9.3 L9.3,10 L5,5.7 L0.7,10 L0,9.3 L4.3,5 L0,0.7 z" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border BorderThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=BorderThickness}"
+                                    BorderBrush="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=BorderBrush}"
+                                    CornerRadius="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.Radius)}"
+                                    Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Height}"
+                                    Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Width}"
+                                    Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Background}">
+                                <Grid>
+                                    <ContentControl HorizontalAlignment="Center" 
+                                                    VerticalAlignment="Center"
+                                                    Margin="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Padding}">
+                                        <Path Fill="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Foreground}" 
+                                              Stretch="Uniform"
+                                              Data="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Content}"/>
+                                    </ContentControl>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.HoverBackground)}"/>
+                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.HoverForeground)}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.PressBackground)}"/>
+                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.PressForeground)}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="SubButton" TargetType="Button" BasedOn="{StaticResource CloseButtonStyle}">
+                <Setter Property="Background" Value="Pink"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Padding" Value="8"/>
+                <Setter Property="Height" Value="24"/>
+                <Setter Property="Width" Value="24"/>
+                <Setter Property="local:ButtonAttach.Radius" Value="4"/>
+            </Style>
+
+            <Style x:Key="AddButton" TargetType="Button" BasedOn="{StaticResource CloseButtonStyle}">
+                <Setter Property="Background" Value="CadetBlue"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="local:ButtonAttach.Radius" Value="4"/>
+                <Setter Property="local:ButtonAttach.HoverBackground" Value="{StaticResource BlueColor}"/>
+                <Setter Property="local:ButtonAttach.HoverForeground" Value="{StaticResource LightColor}"/>
+                <Setter Property="local:ButtonAttach.PressBackground" Value="{StaticResource LightBlueColor}"/>
+                <Setter Property="local:ButtonAttach.PressForeground" Value="{StaticResource LightColor}"/>
+                <Setter Property="Padding" Value="4"/>
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Height" Value="20"/>
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <PathGeometry Figures="M8,0 C8.5522847,0 9,0.44771525 9,1 L9,7 15,7 C15.552285,7 16,7.4477153 16,8 16,8.5522852 15.552285,9 15,9 L9,9 9,15 C9,15.552285 8.5522847,16 8,16 7.4477153,16 7,15.552285 7,15 L7,9 1,9 C0.44771528,9 0,8.5522852 0,8 0,7.4477153 0.44771528,7 1,7 L7,7 7,1 C7,0.44771525 7.4477153,0 8,0 z" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="ItemsControl">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <StackPanel/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate DataType="{x:Type local:IdValue}">
+                            <Grid Margin="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Path=Id,StringFormat={}{0}.}"/>
+                                <TextBox Margin="6 0" 
+                                         VerticalContentAlignment="Center" 
+                                         Height="24" 
+                                         Padding="6 0"
+                                         Grid.Column="1" 
+                                         Text="{Binding Path=Value}"/>
+                                <Button Grid.Column="2"
+                                        Visibility="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl},Path=Items.Count,Converter={StaticResource ItemCountVisibilityConverter}}" 
+                                        DataContext="{Binding}"
+                                        Click="Sub_Url"
+                                        Style="{StaticResource SubButton}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="32"/>
+    </WindowChrome.WindowChrome>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid d:Background="#ffe">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <Image Source="favicon.ico" Margin="6 0" Height="24"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding TitleText}" d:Text="MyApp-更新程序"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button WindowChrome.IsHitTestVisibleInChrome="True" 
+                        Style="{StaticResource CloseButtonStyle}" 
+                        Click="Window_Close"
+                        IsEnabled="{Binding Running,Converter={StaticResource BoolToVisibilityReverseConverter}}"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Expander d:IsExpanded="True" Header="配置">
+                <StackPanel Margin="6">
+                    <GroupBox Header="检查更新地址">
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding CheckUrls}">
+                                <d:ItemsControl.ItemsSource>
+                                    <x:Array Type="local:IdValue">
+                                        <local:IdValue Id="1" Value="https://www.bing.com"/>
+                                        <local:IdValue Id="2" Value="https://www.bing.com"/>
+                                    </x:Array>
+                                </d:ItemsControl.ItemsSource>
+                            </ItemsControl>
+                            <Button Click="Add_CheckUrl" Style="{StaticResource AddButton}"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="更新包下载地址" Margin="0 6 0 0">
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding DownloadUrls}">
+                                <d:ItemsControl.ItemsSource>
+                                    <x:Array Type="local:IdValue">
+                                        <local:IdValue Id="1" Value="https://www.bing.com"/>
+                                        <local:IdValue Id="2" Value="https://www.bing.com"/>
+                                    </x:Array>
+                                </d:ItemsControl.ItemsSource>
+                            </ItemsControl>
+                            <Button Click="Add_DownloadUrl" Style="{StaticResource AddButton}"/>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </Expander>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <TextBlock Text="当前版本:"/>
+                <TextBlock Text="{Binding CurrentVersion}" d:Text="1.0.0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <TextBlock Text="最新版本:"/>
+                <TextBlock Text="{Binding LastVersion}" d:Text="1.0.1"/>
+            </StackPanel>
+            <StackPanel Grid.Row="3" Orientation="Horizontal">
+                <Button Content="取消"/>
+                <Button Content="检查"/>
+                <Button Content="更新"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

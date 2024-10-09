@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinInstaller.Launcher"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        Title="MainWindow" Height="0" Width="0">
     <Grid>
         
     </Grid>
