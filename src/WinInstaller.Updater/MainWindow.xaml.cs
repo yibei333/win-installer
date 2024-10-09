@@ -297,23 +297,23 @@ public class IdValue : INotifyPropertyChanged
 
 public class ButtonAttach
 {
-    public static DependencyProperty RadiusProperty = DependencyProperty.RegisterAttached("Radius", typeof(CornerRadius), typeof(ButtonAttach),new PropertyMetadata(new CornerRadius(0)));
+    public static DependencyProperty RadiusProperty = DependencyProperty.RegisterAttached("Radius", typeof(CornerRadius), typeof(ButtonAttach));
     public static CornerRadius GetRadius(DependencyObject dependencyObject) => (CornerRadius)dependencyObject.GetValue(RadiusProperty);
     public static void SetRadius(DependencyObject dependencyObject, object value) => dependencyObject.SetValue(RadiusProperty, value);
 
-    public static DependencyProperty HoverForegroundProperty = DependencyProperty.RegisterAttached("HoverForeground", typeof(Brush), typeof(ButtonAttach), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+    public static DependencyProperty HoverForegroundProperty = DependencyProperty.RegisterAttached("HoverForeground", typeof(Brush), typeof(ButtonAttach));
     public static Brush GetHoverForeground(DependencyObject dependencyObject) => (Brush)dependencyObject.GetValue(HoverForegroundProperty);
     public static void SetHoverForeground(DependencyObject dependencyObject, object value) => dependencyObject.SetValue(HoverForegroundProperty, value);
 
-    public static DependencyProperty PressForegroundProperty = DependencyProperty.RegisterAttached("PressForeground", typeof(Brush), typeof(ButtonAttach), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+    public static DependencyProperty PressForegroundProperty = DependencyProperty.RegisterAttached("PressForeground", typeof(Brush), typeof(ButtonAttach));
     public static Brush GetPressForeground(DependencyObject dependencyObject) => (Brush)dependencyObject.GetValue(PressForegroundProperty);
     public static void SetPressForeground(DependencyObject dependencyObject, object value) => dependencyObject.SetValue(PressForegroundProperty, value);
 
-    public static DependencyProperty HoverBackgroundProperty = DependencyProperty.RegisterAttached("HoverBackground", typeof(Brush), typeof(ButtonAttach), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+    public static DependencyProperty HoverBackgroundProperty = DependencyProperty.RegisterAttached("HoverBackground", typeof(Brush), typeof(ButtonAttach));
     public static Brush GetHoverBackground(DependencyObject dependencyObject) => (Brush)dependencyObject.GetValue(HoverBackgroundProperty);
     public static void SetHoverBackground(DependencyObject dependencyObject, object value) => dependencyObject.SetValue(HoverBackgroundProperty, value);
 
-    public static DependencyProperty PressBackgroundProperty = DependencyProperty.RegisterAttached("PressBackground", typeof(Brush), typeof(ButtonAttach), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+    public static DependencyProperty PressBackgroundProperty = DependencyProperty.RegisterAttached("PressBackground", typeof(Brush), typeof(ButtonAttach));
     public static Brush GetPressBackground(DependencyObject dependencyObject) => (Brush)dependencyObject.GetValue(PressBackgroundProperty);
     public static void SetPressBackground(DependencyObject dependencyObject, object value) => dependencyObject.SetValue(PressBackgroundProperty, value);
 }

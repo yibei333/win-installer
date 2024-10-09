@@ -17,6 +17,8 @@
             <SolidColorBrush x:Key="LightColor" Color="White"/>
             <SolidColorBrush x:Key="BlueColor" Color="Blue"/>
             <SolidColorBrush x:Key="LightBlueColor" Color="BlueViolet"/>
+            <CornerRadius x:Key="FourRadius" TopLeft="4" TopRight="4" BottomRight="4" BottomLeft="4"/>
+            <CornerRadius x:Key="ZeroRadius" TopLeft="0" TopRight="0" BottomRight="0" BottomLeft="0"/>
 
             <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <local:BoolToVisibilityReverseConverter x:Key="BoolToVisibilityReverseConverter"/>
@@ -29,7 +31,7 @@
                 <Setter Property="local:ButtonAttach.HoverForeground" Value="{StaticResource LightColor}"/>
                 <Setter Property="local:ButtonAttach.PressBackground" Value="{StaticResource LightRedColor}"/>
                 <Setter Property="local:ButtonAttach.PressForeground" Value="{StaticResource LightColor}"/>
-                <Setter Property="local:ButtonAttach.Radius" Value="0"/>
+                <Setter Property="local:ButtonAttach.Radius" Value="{StaticResource ZeroRadius}"/>
                 <Setter Property="Padding" Value="10"/>
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Width" Value="32"/>
@@ -42,30 +44,30 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border BorderThickness="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=BorderThickness}"
-                                    BorderBrush="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=BorderBrush}"
-                                    CornerRadius="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.Radius)}"
-                                    Height="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Height}"
-                                    Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Width}"
-                                    Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Background}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    CornerRadius="{Binding RelativeSource={RelativeSource Mode=Self},Path=(local:ButtonAttach.Radius)}"
+                                    Height="{TemplateBinding Height}"
+                                    Width="{TemplateBinding Width}"
+                                    Background="{TemplateBinding Background}">
                                 <Grid>
                                     <ContentControl HorizontalAlignment="Center" 
                                                     VerticalAlignment="Center"
-                                                    Margin="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Padding}">
-                                        <Path Fill="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Foreground}" 
+                                                    Margin="{TemplateBinding Padding}">
+                                        <Path Fill="{TemplateBinding Foreground}" 
                                               Stretch="Uniform"
-                                              Data="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=Content}"/>
+                                              Data="{TemplateBinding Content}"/>
                                     </ContentControl>
                                 </Grid>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.HoverBackground)}"/>
-                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.HoverForeground)}"/>
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=(local:ButtonAttach.HoverBackground)}"/>
+                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=(local:ButtonAttach.HoverForeground)}"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.PressBackground)}"/>
-                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=(local:ButtonAttach.PressForeground)}"/>
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=(local:ButtonAttach.PressBackground)}"/>
+                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=Self},Path=(local:ButtonAttach.PressForeground)}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -79,13 +81,13 @@
                 <Setter Property="Padding" Value="8"/>
                 <Setter Property="Height" Value="24"/>
                 <Setter Property="Width" Value="24"/>
-                <Setter Property="local:ButtonAttach.Radius" Value="4"/>
+                <Setter Property="local:ButtonAttach.Radius" Value="{StaticResource FourRadius}"/>
             </Style>
 
             <Style x:Key="AddButton" TargetType="Button" BasedOn="{StaticResource CloseButtonStyle}">
                 <Setter Property="Background" Value="CadetBlue"/>
                 <Setter Property="Foreground" Value="White"/>
-                <Setter Property="local:ButtonAttach.Radius" Value="4"/>
+                <Setter Property="local:ButtonAttach.Radius" Value="{StaticResource FourRadius}"/>
                 <Setter Property="local:ButtonAttach.HoverBackground" Value="{StaticResource BlueColor}"/>
                 <Setter Property="local:ButtonAttach.HoverForeground" Value="{StaticResource LightColor}"/>
                 <Setter Property="local:ButtonAttach.PressBackground" Value="{StaticResource LightBlueColor}"/>
@@ -128,7 +130,7 @@
                                         Visibility="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl},Path=Items.Count,Converter={StaticResource ItemCountVisibilityConverter}}" 
                                         DataContext="{Binding}"
                                         Click="Sub_Url"
-                                        Style="{StaticResource SubButton}"/>
+                                        Style="{DynamicResource SubButton}"/>
                             </Grid>
                         </DataTemplate>
                     </Setter.Value>
@@ -177,12 +179,12 @@
                             <ItemsControl ItemsSource="{Binding CheckUrls}">
                                 <d:ItemsControl.ItemsSource>
                                     <x:Array Type="local:IdValue">
-                                        <local:IdValue Id="1" Value="https://www.bing.com"/>
-                                        <local:IdValue Id="2" Value="https://www.bing.com"/>
+                                        <local:IdValue Id="1" Type="1" Value="https://www.bing.com"/>
+                                        <local:IdValue Id="2" Type="1" Value="https://www.bing.com"/>
                                     </x:Array>
                                 </d:ItemsControl.ItemsSource>
                             </ItemsControl>
-                            <Button Click="Add_CheckUrl" Style="{StaticResource AddButton}"/>
+                            <Button Click="Add_CheckUrl" Style="{DynamicResource AddButton}"/>
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Header="更新包下载地址" Margin="0 6 0 0">
@@ -190,12 +192,12 @@
                             <ItemsControl ItemsSource="{Binding DownloadUrls}">
                                 <d:ItemsControl.ItemsSource>
                                     <x:Array Type="local:IdValue">
-                                        <local:IdValue Id="1" Value="https://www.bing.com"/>
-                                        <local:IdValue Id="2" Value="https://www.bing.com"/>
+                                        <local:IdValue Id="1" Type="2" Value="https://www.bing.com"/>
+                                        <local:IdValue Id="2" Type="2" Value="https://www.bing.com"/>
                                     </x:Array>
                                 </d:ItemsControl.ItemsSource>
                             </ItemsControl>
-                            <Button Click="Add_DownloadUrl" Style="{StaticResource AddButton}"/>
+                            <Button Click="Add_DownloadUrl" Style="{DynamicResource AddButton}"/>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>
