@@ -10,7 +10,7 @@ namespace WinInstaller.Updater;
 
 public partial class MainWindow : Window, INotifyPropertyChanged
 {
-    Config _config;
+    readonly Config _config;
 
     public MainWindow()
     {
@@ -56,8 +56,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void Sub_Url(object sender, RoutedEventArgs e)
     {
-        var button = sender as Button;
-        if (button is null) return;
+        if (sender is not Button button) return;
         var item = button.DataContext as IdValue;
         if (item.Type == 1)
         {
@@ -80,6 +79,16 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void Add_DownloadUrl(object sender, RoutedEventArgs e)
     {
         DownloadUrls.Add(new IdValue { Type = 2 });
+    }
+
+    private void CheckUpdate(object sender, RoutedEventArgs e)
+    {
+        Check();
+    }
+
+    private void DownloadUpdate(object sender, RoutedEventArgs e)
+    {
+        Update();
     }
 
     #region Properties
@@ -158,6 +167,20 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
+    string log;
+    public string Log
+    {
+        get => log;
+        set
+        {
+            if (log != value)
+            {
+                log = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Log)));
+            }
+        }
+    }
+
     public ObservableCollection<IdValue> CheckUrls { get; } = new ObservableCollection<IdValue>();
     public ObservableCollection<IdValue> DownloadUrls { get; } = new ObservableCollection<IdValue>();
     #endregion
@@ -198,6 +221,10 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         await Task.Yield();
         try
         {
+            await HttpHelper.Download(@"https://gitee.com/yibei333/private-cloud/releases/download/1.0.8/clients.privatecloud.win64.1.0.8.exe", @"D:\test.exe", (total, handled, progress, speed) =>
+            {
+                Log = $"{handled}/{total},{progress},{speed}";
+            });
             await Task.Run(() =>
             {
 
