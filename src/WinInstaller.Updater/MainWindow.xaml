@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinInstaller.Updater"
         mc:Ignorable="d"
-        Height="450" Width="800"
+        Width="400"
         WindowStyle="None"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
+        SizeToContent="Height"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Window.Resources>
         <ResourceDictionary>
@@ -25,7 +26,8 @@
             <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <local:BoolToVisibilityReverseConverter x:Key="BoolToVisibilityReverseConverter"/>
             <local:ItemCountVisibilityConverter x:Key="ItemCountVisibilityConverter"/>
-
+            <local:BoolReverseConverter x:Key="BoolReverseConverter"/>
+            
             <Style x:Key="ButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="#EEE"/>
                 <Setter Property="Foreground" Value="Black"/>
@@ -39,6 +41,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Border BorderThickness="{TemplateBinding BorderThickness}"
+                                    IsEnabled="{TemplateBinding IsEnabled}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     CornerRadius="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=(local:ButtonAttach.Radius)}"
                                     Height="{TemplateBinding Height}"
@@ -170,7 +173,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Expander d:IsExpanded="True" Header="配置">
@@ -219,13 +222,30 @@
                 <TextBlock Text="最新版本:"/>
                 <TextBlock Text="{Binding LastVersion}" d:Text="1.0.1"/>
             </StackPanel>
-            <StackPanel Grid.Row="3" Margin="0 6">
-                <TextBlock Text="{Binding Log}" d:Text="正在检查更新"/>
+            <StackPanel Grid.Row="3" Margin="0 6" Visibility="{Binding Updating,Converter={StaticResource BoolToVisibilityConverter}}">
+                <ProgressBar Minimum="0"
+                             Maximum="100"
+                             Height="10"
+                             d:Value="50"
+                             Value="{Binding Progress.Progress}"/>
+                <TextBlock Text="{Binding Progress.Handled,StringFormat={}已处理{0}}"/>
+                <TextBlock Text="{Binding Progress.Total,StringFormat={}共计{0}}"/>
+                <TextBlock Text="{Binding Progress.Speed,StringFormat={}下载速度{0}}"/>
+                <Button Style="{StaticResource ButtonStyle}" Content="取消" Click="CancleUpdate"/>
             </StackPanel>
-            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Style="{StaticResource ButtonStyle}" Click="Window_Close" Content="取消"/>
-                <Button Style="{StaticResource ButtonStyle}" Click="CheckUpdate" Margin="6 0" Content="检查更新"/>
-                <Button Style="{StaticResource ButtonStyle}" Click="DownloadUpdate" Content="安装更新"/>
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding Updating,Converter={StaticResource BoolToVisibilityReverseConverter}}">
+                <Button Style="{StaticResource ButtonStyle}" Click="Window_Close" Content="关闭"/>
+                <Button Style="{StaticResource ButtonStyle}" 
+                        Click="CheckUpdate" 
+                        Margin="6 0" 
+                        Content="检查更新"
+                        IsEnabled="{Binding Running,Converter={StaticResource BoolReverseConverter}}"
+                        Visibility="{Binding HasUpdate,Converter={StaticResource BoolToVisibilityReverseConverter}}"/>
+                <Button Visibility="{Binding HasUpdate,Converter={StaticResource BoolToVisibilityConverter}}" 
+                        Style="{StaticResource ButtonStyle}" 
+                        Click="DownloadUpdate" 
+                        Content="安装更新"
+                        IsEnabled="{Binding Running,Converter={StaticResource BoolReverseConverter}}"/>
             </StackPanel>
         </Grid>
     </Grid>

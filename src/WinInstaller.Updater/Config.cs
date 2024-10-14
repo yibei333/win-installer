@@ -44,7 +44,7 @@ namespace WinInstaller.Updater
 
             foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
-                key.SetValue(property.Name, property.GetValue(this));
+                key.SetValue(property.Name, property.GetValue(this)??string.Empty);
             }
         }
 

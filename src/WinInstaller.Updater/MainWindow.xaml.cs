@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,6 +13,7 @@ namespace WinInstaller.Updater;
 public partial class MainWindow : Window, INotifyPropertyChanged
 {
     readonly Config _config;
+    CancellationTokenSource CancellationTokenSource = new();
 
     public MainWindow()
     {
@@ -91,6 +94,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         Update();
     }
 
+    private void CancleUpdate(object sender, RoutedEventArgs e)
+    {
+        CancellationTokenSource.Cancel();
+        CancellationTokenSource = new CancellationTokenSource();
+        Progress = null;
+    }
+
     #region Properties
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -122,6 +132,20 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
+    bool updating;
+    public bool Updating
+    {
+        get => updating;
+        set
+        {
+            if (updating != value)
+            {
+                updating = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Updating)));
+            }
+        }
+    }
+
     string currentVersion;
     public string CurrentVersion
     {
@@ -148,8 +172,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LastVersion)));
             }
 
-            if (!string.IsNullOrWhiteSpace(LastVersion) && LastVersion != CurrentVersion) hasUpdate = true;
-            else hasUpdate = false;
+            if (!string.IsNullOrWhiteSpace(LastVersion) && LastVersion != CurrentVersion) HasUpdate = true;
+            else HasUpdate = false;
         }
     }
 
@@ -167,16 +191,16 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
-    string log;
-    public string Log
+    ProgressModel progress;
+    public ProgressModel Progress
     {
-        get => log;
+        get => progress;
         set
         {
-            if (log != value)
+            if (progress != value)
             {
-                log = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Log)));
+                progress = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Progress)));
             }
         }
     }
@@ -196,14 +220,33 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     async void Check()
     {
+        if (CheckUrls.Count(x => !string.IsNullOrWhiteSpace(x.Value)) <= 0)
+        {
+            MessageBox.Show("请配置检查更新的地址");
+            return;
+        }
+
         Running = true;
         await Task.Yield();
+        _config.Set();
         try
         {
-            await Task.Run(() =>
+            var flag = false;
+            var message = string.Empty;
+            foreach (var url in CheckUrls)
             {
-
-            });
+                try
+                {
+                    LastVersion = await HttpHelper.Get(url.Value);
+                    flag = true;
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+            }
+            if (!flag) throw new Exception($"检查更新失败:{message}");
         }
         catch (Exception ex)
         {
@@ -217,18 +260,52 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     async void Update()
     {
+        if (DownloadUrls.Count(x => !string.IsNullOrWhiteSpace(x.Value)) <= 0)
+        {
+            MessageBox.Show("请配置下载更新的地址");
+            return;
+        }
+
         Running = true;
+        Updating = true;
         await Task.Yield();
+        _config.Set();
         try
         {
-            await HttpHelper.Download(@"https://gitee.com/yibei333/private-cloud/releases/download/1.0.8/clients.privatecloud.win64.1.0.8.exe", @"D:\test.exe", (total, handled, progress, speed) =>
-            {
-                Log = $"{handled}/{total},{progress},{speed}";
-            });
-            await Task.Run(() =>
-            {
+            var directory = Path.Combine(_config.InstallLocation, "packages");
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            var path = Path.Combine(directory, $"{_config.DisplayName}.exe");
 
-            });
+            var flag = false;
+            var message = string.Empty;
+            foreach (var url in DownloadUrls)
+            {
+                try
+                {
+                    await HttpHelper.Download(url.Value, path, progress =>
+                    {
+                        Progress = progress;
+                    }, CancellationTokenSource.Token);
+                    flag = true;
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+                if (!flag) throw new Exception($"更新失败:{message}");
+
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo(path)
+                    {
+                        WorkingDirectory = directory
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+                Application.Current.Shutdown();
+            }
         }
         catch (Exception ex)
         {
@@ -237,6 +314,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         finally
         {
             Running = false;
+            Updating = false;
         }
     }
 }
@@ -263,6 +341,20 @@ public class BoolToVisibilityReverseConverter : IValueConverter
         var boolValue = bool.TryParse(value?.ToString(), out var result) && result;
         if (!boolValue) return Visibility.Visible;
         else return Visibility.Collapsed;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class BoolReverseConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        var boolValue = bool.TryParse(value?.ToString(), out var result) && result;
+        return !boolValue;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -343,4 +435,65 @@ public class ButtonAttach
     public static DependencyProperty PressBackgroundProperty = DependencyProperty.RegisterAttached("PressBackground", typeof(Brush), typeof(ButtonAttach));
     public static Brush GetPressBackground(DependencyObject dependencyObject) => (Brush)dependencyObject.GetValue(PressBackgroundProperty);
     public static void SetPressBackground(DependencyObject dependencyObject, object value) => dependencyObject.SetValue(PressBackgroundProperty, value);
+}
+
+public class ProgressModel : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    long _total;
+    public long Total
+    {
+        get => _total;
+        set
+        {
+            if (value != _total)
+            {
+                _total = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Total)));
+            }
+        }
+    }
+
+    long _handled;
+    public long Handled
+    {
+        get => _handled;
+        set
+        {
+            if (value != _handled)
+            {
+                _handled = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Handled)));
+            }
+        }
+    }
+
+    double _progress;
+    public double Progress
+    {
+        get => _progress;
+        set
+        {
+            if (value != _progress)
+            {
+                _progress = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Progress)));
+            }
+        }
+    }
+
+    string _speed;
+    public string Speed
+    {
+        get => _speed;
+        set
+        {
+            if (value != _speed)
+            {
+                _speed = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Speed)));
+            }
+        }
+    }
 }
