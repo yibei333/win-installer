@@ -175,6 +175,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Expander d:IsExpanded="True" Header="配置">
                 <StackPanel Margin="6">
@@ -247,6 +248,7 @@
                         Content="安装更新"
                         IsEnabled="{Binding Running,Converter={StaticResource BoolReverseConverter}}"/>
             </StackPanel>
+            <WebBrowser Grid.Row="5" Height="200" x:Name="browser"></WebBrowser>
         </Grid>
     </Grid>
 </Window>

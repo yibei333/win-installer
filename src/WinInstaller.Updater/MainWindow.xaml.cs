@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -41,6 +42,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         };
         Init();
         Check();
+
+        browser.ObjectForScripting = new JavascriptManager(browser);
     }
 
     protected override void OnClosing(CancelEventArgs e)

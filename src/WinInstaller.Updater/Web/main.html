@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="main.css" />
+<script src="main.js"></script>
+
+<button id="test" class="btn">test</button>
+
+<button type="button" class="btn">Default</button>
+<button type="button" class="btn btn-primary">Primary</button>
+<button type="button" class="btn btn-success">Success</button>
+<button type="button" class="btn btn-error">Error</button>
+<button type="button" class="btn btn-primary" disabled>Disabled</button>
+<button class="btn loading">button</button>
+<button class="btn btn-primary loading">loading</button>
+
+<div class="bar">
+    <div class="bar-item" role="progressbar" style="width:25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+<script>
+    function callSharp() {
+        let content = window.external.SharpMethod('foo');
+        alert(content);
+    }
+
+    window.onload = function () {
+        document.getElementById('test').addEventListener('click', function () {
+            callSharp();
+        });
+    }
+</script>

@@ -20,4 +20,10 @@
 	<ItemGroup>
 		<Resource Include="favicon.ico" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Web\**\*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
 </Project>
