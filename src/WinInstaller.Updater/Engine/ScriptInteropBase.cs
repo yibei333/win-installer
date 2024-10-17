@@ -1,25 +1,13 @@
-﻿using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Xml.Linq;
 
-namespace WinInstaller.Updater;
+namespace WinInstaller.Updater.Engine;
 
-[ComVisible(true)]
-public class JavascriptManager
+public abstract class ScriptInteropBase
 {
-    public JavascriptManager(WebBrowser browser)
-    {
-        Browser = browser;
-        Browser.NavigateToString(BuildHtml());
-    }
-
-    public WebBrowser Browser { get; }
-
-    #region Init
-    string BuildHtml()
+    public string BuildHtml()
     {
         var builder = new StringBuilder();
         builder.AppendLine("<html>");
@@ -28,11 +16,17 @@ public class JavascriptManager
 #else
         builder.AppendLine("<body oncontextmenu='return false'>");
 #endif
+        builder.AppendLine(LoadResource("lib.js"));
+        builder.AppendLine(LoadResource("lib.css"));
         builder.AppendLine(LoadResource("main.css"));
         builder.AppendLine(LoadResource("main.js"));
         var html = LoadResource("main.html");
+        html = html.Replace("<link rel=\"stylesheet\" href=\"lib.css\" />", "");
         html = html.Replace("<link rel=\"stylesheet\" href=\"main.css\" />", "");
+        html = html.Replace("<link rel=\"stylesheet\" href=\"main-dev.css\" />", "");
+        html = html.Replace("<script src=\"lib.js\"></script>", "");
         html = html.Replace("<script src=\"main.js\"></script>", "");
+        html = html.Replace("<script src=\"main-dev.js\"></script>", "");
         builder.AppendLine(html);
         builder.AppendLine("</body>");
         builder.AppendLine("</html>");
@@ -43,7 +37,7 @@ public class JavascriptManager
     {
         try
         {
-            var content = EmbeddedResourceManager.Get(name);
+            var content = name.GetResourceText();
             var extension = new FileInfo(name).Extension;
             if (extension == ".js")
             {
@@ -63,13 +57,15 @@ public class JavascriptManager
 #if DEBUG
             MessageBox.Show(ex.Message);
 #endif
+            Debug.WriteLine(ex.StackTrace);
         }
         return "nope";
     }
-    #endregion
 
-    public string SharpMethod(string text)
+    public void SetRunningState(bool running)
     {
-        return $"sharp response:{text}";
+        App.CurrentInstance.Running = running;
     }
+
+    public void Alert(string message) => MessageBox.Show(message);
 }

@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http;
 
-namespace WinInstaller.Updater;
+namespace WinInstaller.Updater.Engine;
 
 public static class HttpHelper
 {
@@ -40,13 +40,13 @@ public static class HttpHelper
                 if (millSeconds > 1000)
                 {
                     var speedNumber = Math.Round(tempHanlded * 1000 / (millSeconds * 1024), 2);
-                    speed = speedNumber > 1024 ? $"{Math.Round(speedNumber / 1024, 2)}MB/S" : $"{speedNumber}KB/S";
+                    speed = speedNumber > 1024 ? $"{Math.Round(speedNumber / 1024, 2)}MB/s" : $"{speedNumber}KB/s";
 
                     time = now;
                     tempHanlded = 0;
                 }
                 var progressValue = Math.Round(handled * 100.0 / total, 2);
-                progress?.Invoke(new ProgressModel { Total = total, Handled = handled, Speed = speed, Progress = progressValue });
+                progress?.Invoke(new ProgressModel(total, handled, progressValue, speed));
             }
         });
     }
