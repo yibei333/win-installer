@@ -13,10 +13,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="System.Windows.Forms" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Resource Include="favicon.ico" />
 	</ItemGroup>
 </Project>
