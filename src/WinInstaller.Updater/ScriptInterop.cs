@@ -9,15 +9,10 @@ public class ScriptInterop : ScriptInteropBase
 {
     static CancellationTokenSource cancle;
 
-    public string SharpMethod(string text)
-    {
-        return $"sharp response:{text}";
-    }
-
     public string GetIcon() => ResourceExtension.GetBase64Icon();
 
     public string GetCurrentVersion() => App.CurrentInstance.Config.DisplayVersion;
-    
+
     public async void CheckUpdate()
     {
         try

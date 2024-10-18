@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Windows;
 
-namespace WinInstaller.Updater.Engine;
+namespace WinInstaller.Uninstaller.Engine;
 
 public abstract class ScriptInteropBase
 {
