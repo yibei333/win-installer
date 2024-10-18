@@ -12,44 +12,44 @@
                 <path d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m0-73.143a438.857 438.857 0 1 0 0-877.714 438.857 438.857 0 0 0 0 877.714z m-173.349-609.06l174.812 306.468L706.267 340.48a36.571 36.571 0 0 1 61.952 38.839L542.94 738.962a36.571 36.571 0 0 1-62.683-1.316L275.017 378.002a36.571 36.571 0 0 1 63.561-36.205z" fill="#1296db"></path>
             </svg>
             <label class="m-0-6">当前版本:</label>
-            <h6>{{currentVersion}}</h6>
+            <h6 data-bind="text: currentVersion"></h6>
         </div>
 
-        <div class="item" v-show="alreadyUpdateToDate">
+        <div class="item" data-bind="visible: alreadyUpdateToDate">
             <svg viewBox="0 0 1024 1024" height="24" width="24">
                 <path d="M509.92 176C325.504 176 176 325.504 176 509.92c0 184.416 149.504 333.92 333.92 333.92 184.416 0 333.92-149.504 333.92-333.92C843.84 325.504 694.32 176 509.92 176z m166.64 214.848a16 16 0 0 1 22.624 0l11.328 11.312a16 16 0 0 1 0 22.624l-254.08 254.08a16 16 0 0 1-22.624 0l-159.616-159.632a16 16 0 0 1 0-22.624l11.312-11.312a16 16 0 0 1 22.624 0l136.992 136.992z" fill="#145c18"></path>
             </svg>
             <label class="m-0-6">已是最新版本</label>
         </div>
 
-        <div class="item" v-show="hasUpdate">
+        <div class="item" data-bind="visible: hasUpdate">
             <svg viewBox="0 0 1024 1024" height="20" width="20">
                 <path d="M853.333333 853.333333v85.333334H170.666667v-85.333334h682.666666zM512 85.333333a42.666667 42.666667 0 0 1 27.733333 10.24l3.669334 3.541334 341.333333 370.773333a42.666667 42.666667 0 0 1-25.813333 71.168L853.333333 541.44h-117.973333V725.333333a42.666667 42.666667 0 0 1-37.674667 42.368l-4.992 0.298667h-361.386666a42.666667 42.666667 0 0 1-42.410667-37.674667L288.64 725.333333v-183.893333H170.666667a42.666667 42.666667 0 0 1-34.901334-67.242667l3.498667-4.352 341.333333-370.773333A42.666667 42.666667 0 0 1 512 85.333333z m0 105.642667L267.946667 456.106667h63.36a42.666667 42.666667 0 0 1 42.368 37.674666l0.298666 4.992V682.666667h276.053334v-183.893334a42.666667 42.666667 0 0 1 37.717333-42.410666l4.949333-0.256h63.36L512 190.976z" fill="#4D7CFF"></path>
             </svg>
             <label class="m-0-6">最新版本:</label>
-            <h6>{{lastVersion}}</h6>
+            <h6 data-bind="text: lastVersion"></h6>
         </div>
 
-        <div class="progress-bar" v-show="hasUpdate&&running">
+        <div class="progress-bar" data-bind="visible: hasUpdate()&&running()">
             <div class="bar">
-                <div class="bar-item" v-bind:style="{'width':progress.progress+'%'}">{{progress.progress}}%</div>
+                <div class="bar-item" data-bind="style: { width: progress_progress()+'%' },text: progress_progress()+'%'"></div>
             </div>
             <div class="statics">
-                <label>{{progress.handled}}/{{progress.total}}</label>
-                <label>{{progress.speed}}</label>
+                <label data-bind="text: progress_handled()+'/'+progress_total()"></label>
+                <label data-bind="text: progress_speed"></label>
             </div>
         </div>
 
         <div class="operations">
-            <button class="btn btn-primary btn-lg" v-on:click="check" v-show="checkShow" v-bind:disabled="running">
+            <button class="btn btn-primary btn-lg" data-bind="click: check,visible: checkShow,attr: {disabled: running}">
                 <i class="icon icon-search"></i>
                 检查更新&nbsp;&nbsp;
             </button>
-            <button class="btn btn-success btn-lg" v-on:click="update" v-show="hasUpdate&&!running" v-bind:disabled="running">
+            <button class="btn btn-success btn-lg" data-bind="click: update,visible: installShow,attr: {disabled: running}">
                 <i class="icon icon-downward"></i>
                 安装&nbsp;&nbsp;
             </button>
-            <button class="btn btn-error btn-lg" v-on:click="cancleUpdate" v-show="hasUpdate&&running">
+            <button class="btn btn-error btn-lg" data-bind="click: cancleUpdate,visible: hasUpdate()&&running()">
                 <i class="icon icon-cross"></i>
                 取消&nbsp;&nbsp;
             </button>
@@ -58,69 +58,68 @@
 </div>
 
 <script>
-    var data = {
-        currentVersion: GetCurrentVersion(),
-        checkUpdateUrl: '',
-        downloadPackageUrl: '',
-        lastVersion: '',
-        icon: '',
-        running: false,
-        progress: {
-            total: 200,
-            handled: 100,
-            progress: 50,
-            speed: '2.5MB/s'
+    var viewModel = {
+        currentVersion: ko.observable(GetCurrentVersion()),
+        checkUpdateUrl: ko.observable(""),
+        downloadPackageUrl: ko.observable(""),
+        lastVersion: ko.observable(""),
+        icon: ko.observable(""),
+        running: ko.observable(false),
+        progress_total: ko.observable(200),
+        progress_handled: ko.observable(100),
+        progress_progress: ko.observable(50),
+        progress_speed: ko.observable('2.5MB/s'),
+        hasUpdate: ko.pureComputed({
+            read: function () {
+                return viewModel.currentVersion() != '' && viewModel.lastVersion() != '' && viewModel.currentVersion() != viewModel.lastVersion();
+            }
+        }),
+        alreadyUpdateToDate: ko.pureComputed({
+            read: function () {
+                return viewModel.currentVersion() != '' && viewModel.lastVersion() != '' && viewModel.currentVersion() == viewModel.lastVersion();
+            }
+        }),
+        checkShow: ko.pureComputed({
+            read: function () {
+                return !viewModel.hasUpdate();
+            }
+        }),
+        installShow: ko.pureComputed({
+            read: function () {
+                return viewModel.hasUpdate() && !viewModel.running();
+            }
+        }),
+        check: function () {
+            viewModel.running(true);
+            viewModel.lastVersion('');
+            CheckUpdate();
+        },
+        update: function () {
+            viewModel.progress_total(0);
+            viewModel.progress_handled(0);
+            viewModel.progress_progress(0);
+            viewModel.progress_speed('0');
+            viewModel.running(true);
+            DownloadUpdate();
+        },
+        cancleUpdate: function () {
+            CancleDownloadAndUpdate();
         }
     };
+    ko.applyBindings(viewModel, document.getElementById('app'));
 
-    var vm = new MVVM({
-        view: document.getElementById('app'),
-        model: data,
-        computed: {
-            hasUpdate: function () {
-                return this.currentVersion != '' && this.lastVersion != '' && this.currentVersion != this.lastVersion;
-            },
-            alreadyUpdateToDate: function () {
-                return this.currentVersion != '' && this.lastVersion != '' && this.currentVersion == this.lastVersion;
-            },
-            checkShow: function () {
-                return !this.hasUpdate;
-            }
-        },
-        methods: {
-            check: function () {
-                this.running = true;
-                this.lastVersion = '';
-                checkUpdate();
-            },
-            update: function () {
-                this.progress = {
-                    total: 0,
-                    handled: 0,
-                    progress: 0,
-                    speed: '0'
-                }
-                this.running = true;
-                downloadUpdate('https://gitee.com/yibei333/private-cloud/releases/download/1.0.8/clients.privatecloud.win64.1.0.8.exe');
-            },
-            cancleUpdate: function () {
-                cancleDownloadAndUpdate();
-            }
-        }
-    });
-
-    function setLastVersion(version) {
-        vm.$data.lastVersion = version;
+    function setLastVersion(value) {
+        viewModel.lastVersion(value);
     }
 
     function setProgress(total, handled, progress, speed) {
-        vm.$data.progress.total = total;
-        vm.$data.progress.handled = handled;
-        vm.$data.progress.progress = progress;
-        vm.$data.progress.speed = speed;
+        viewModel.progress_total(total);
+        viewModel.progress_handled(handled);
+        viewModel.progress_progress(progress);
+        viewModel.progress_speed(speed);
     }
 
     function setRunningState(value) {
-        vm.$data.running = value;
+        viewModel.running(value);
     }
 </script>

@@ -10,7 +10,11 @@ public abstract class ScriptInteropBase
     public string BuildHtml()
     {
         var builder = new StringBuilder();
+        builder.AppendLine("<!DOCTYPE html>");
         builder.AppendLine("<html>");
+        builder.AppendLine("<head>");
+        builder.AppendLine("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"/>");
+        builder.AppendLine("</head>");
 #if DEBUG
         builder.AppendLine("<body>");
 #else

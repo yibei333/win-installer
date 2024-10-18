@@ -7,16 +7,16 @@
 
 <div id="app" class="main">
     <div class="main-panel">
-        <div class="input-group p-0-12" v-show="!running&&!success">
+        <div class="input-group p-0-12" data-bind="hidden: running()||success()">
             <span class="input-group-addon addon-lg">安装位置</span>
-            <input type="text" class="form-input input-lg" v-bind:value="installLocation" readonly>
+            <input type="text" class="form-input input-lg" data-bind="value: installLocation" readonly>
         </div>
 
-        <div class="item" v-show="running">
-            <h6 class="log">{{log}}</h6>
+        <div class="item" data-bind="visible: running">
+            <h6 class="log" data-bind="text: log"></h6>
         </div>
 
-        <div class="item" v-show="success">
+        <div class="item" data-bind="visible: success">
             <svg viewBox="0 0 1024 1024" height="24" width="24">
                 <path d="M509.92 176C325.504 176 176 325.504 176 509.92c0 184.416 149.504 333.92 333.92 333.92 184.416 0 333.92-149.504 333.92-333.92C843.84 325.504 694.32 176 509.92 176z m166.64 214.848a16 16 0 0 1 22.624 0l11.328 11.312a16 16 0 0 1 0 22.624l-254.08 254.08a16 16 0 0 1-22.624 0l-159.616-159.632a16 16 0 0 1 0-22.624l11.312-11.312a16 16 0 0 1 22.624 0l136.992 136.992z" fill="#145c18"></path>
             </svg>
@@ -24,11 +24,11 @@
         </div>
 
         <div class="operations">
-            <button class="btn btn-primary btn-lg" v-on:click="uninstall" v-bind:disabled="running" v-show="!success">
+            <button class="btn btn-primary btn-lg" data-bind="click: uninstall,hidden: success,attr: {disabled: running}">
                 <i class="icon icon-delete"></i>
                 卸载&nbsp;&nbsp;
             </button>
-            <button class="btn btn-success btn-lg" v-on:click="close" v-show="success">
+            <button class="btn btn-success btn-lg" data-bind="click: close,visible: success">
                 <i class="icon icon-check"></i>
                 关闭&nbsp;&nbsp;
             </button>
@@ -37,37 +37,30 @@
 </div>
 
 <script>
-    var data = {
-        installLocation: GetInstallLocation(),
-        running: false,
-        log: '',
-        success: false
-    };
-
-    var vm = new MVVM({
-        view: document.getElementById('app'),
-        model: data,
-        methods: {
-            uninstall: function () {
-                this.running = true;
-                this.lastVersion = '';
-                UnInstall();
-            },
-            close: function () {
-                Close();
-            }
+    var viewModel = {
+        installLocation: ko.observable(GetInstallLocation()),
+        running:ko.observable(false),
+        log: ko.observable(""),
+        success: ko.observable(false),
+        uninstall: function () {
+            viewModel.running(true);
+            UnInstall();
+        },
+        close: function () {
+            Close();
         }
-    });
+    };
+    ko.applyBindings(viewModel, document.getElementById('app'));
 
-    function setLog(log) {
-        vm.$data.log = log;
+    function setLog(value) {
+        viewModel.log(value);
     }
 
     function setRunningState(value) {
-        vm.$data.running = value;
+        viewModel.running(value);
     }
 
     function setSuccessState(value) {
-        vm.$data.success = value;
+        viewModel.success(value);
     }
 </script>

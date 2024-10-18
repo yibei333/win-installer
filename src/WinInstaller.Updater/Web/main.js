@@ -6,14 +6,14 @@ function GetCurrentVersion() {
     return window.external.GetCurrentVersion()
 }
 
-function checkUpdate() {
+function CheckUpdate() {
     window.external.CheckUpdate();
 }
 
-function downloadUpdate() {
+function DownloadUpdate() {
     window.external.DownloadAndUpdate();
 }
 
-function cancleDownloadAndUpdate() {
+function CancleDownloadAndUpdate() {
     window.external.StopUpdate();
 }

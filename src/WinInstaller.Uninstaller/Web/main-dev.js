@@ -14,7 +14,7 @@ function UnInstall() {
                 return;
             }
     
-            setLog(`正在删除文件:${handled}.txt`);
+            setLog('正在删除文件:'+handled+'.txt');
             handled += 1;
         }, 100);
     }else{

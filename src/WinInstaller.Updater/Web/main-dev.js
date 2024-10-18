@@ -2,7 +2,7 @@ function GetCurrentVersion() {
     return "1.0.0";
 }
 
-function checkUpdate(){
+function CheckUpdate(){
     var timer = setTimeout(function () {
         clearTimeout(timer);
         setLastVersion('1.0.1');
@@ -12,7 +12,7 @@ function checkUpdate(){
 
 var cancleFlag = false;
 
-function downloadUpdate() {
+function DownloadUpdate() {
     cancleFlag = false;
     var total = 1000;
     var handled = 0;
@@ -34,6 +34,6 @@ function downloadUpdate() {
     }, 100);
 }
 
-function cancleDownloadAndUpdate() {
+function CancleDownloadAndUpdate() {
     cancleFlag = true;
 }
