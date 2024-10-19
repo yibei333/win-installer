@@ -5,8 +5,8 @@
 <script src="main.js"></script>
 <script src="main-dev.js"></script>
 
-<div id="app" class="main">
-    <div class="main-panel">
+<div id="app" class="main" data-bind="style: { paddingTop: panelHeight}">
+    <div class="main-panel" id="main-panel">
         <div class="input-group p-0-12" data-bind="hidden: running()||success()">
             <span class="input-group-addon addon-lg">安装位置</span>
             <input type="text" class="form-input input-lg" data-bind="value: installLocation" readonly>
@@ -38,12 +38,13 @@
 
 <script>
     var viewModel = {
+        panelHeight: ko.observable(''),
         installLocation: ko.observable(GetInstallLocation()),
         running:ko.observable(false),
         log: ko.observable(""),
         success: ko.observable(false),
         uninstall: function () {
-            viewModel.running(true);
+            setRunningState(true);
             UnInstall();
         },
         close: function () {
@@ -54,13 +55,25 @@
 
     function setLog(value) {
         viewModel.log(value);
+        setPaddingTop();
     }
 
     function setRunningState(value) {
         viewModel.running(value);
+        setPaddingTop();
     }
 
     function setSuccessState(value) {
         viewModel.success(value);
+        setPaddingTop();
     }
+
+    function setPaddingTop() {
+        var main = document.getElementById("app");
+        var mainHeight = main.clientHeight;
+        var mainPanel = document.getElementById("main-panel");
+        var panelHeight = mainPanel.clientHeight;
+        viewModel.panelHeight((mainHeight - panelHeight) / 2 + 'px');
+    }
+    setPaddingTop();
 </script>

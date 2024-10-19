@@ -5,8 +5,8 @@
 <script src="main.js"></script>
 <script src="main-dev.js"></script>
 
-<div id="app" class="main">
-    <div class="main-panel">
+<div id="app" class="main" data-bind="style: { paddingTop: panelHeight}">
+    <div class="main-panel" id="main-panel">
         <div class="item">
             <svg viewBox="0 0 1024 1024" height="18" width="18">
                 <path d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m0-73.143a438.857 438.857 0 1 0 0-877.714 438.857 438.857 0 0 0 0 877.714z m-173.349-609.06l174.812 306.468L706.267 340.48a36.571 36.571 0 0 1 61.952 38.839L542.94 738.962a36.571 36.571 0 0 1-62.683-1.316L275.017 378.002a36.571 36.571 0 0 1 63.561-36.205z" fill="#1296db"></path>
@@ -59,11 +59,9 @@
 
 <script>
     var viewModel = {
+        panelHeight: ko.observable(''),
         currentVersion: ko.observable(GetCurrentVersion()),
-        checkUpdateUrl: ko.observable(""),
-        downloadPackageUrl: ko.observable(""),
         lastVersion: ko.observable(""),
-        icon: ko.observable(""),
         running: ko.observable(false),
         progress_total: ko.observable(200),
         progress_handled: ko.observable(100),
@@ -90,16 +88,13 @@
             }
         }),
         check: function () {
-            viewModel.running(true);
-            viewModel.lastVersion('');
+            setRunningState(true);
+            setLastVersion('');
             CheckUpdate();
         },
         update: function () {
-            viewModel.progress_total(0);
-            viewModel.progress_handled(0);
-            viewModel.progress_progress(0);
-            viewModel.progress_speed('0');
-            viewModel.running(true);
+            setProgress(0, 0, 0, '0')
+            setRunningState(true);
             DownloadUpdate();
         },
         cancleUpdate: function () {
@@ -110,6 +105,7 @@
 
     function setLastVersion(value) {
         viewModel.lastVersion(value);
+        setPaddingTop();
     }
 
     function setProgress(total, handled, progress, speed) {
@@ -117,9 +113,20 @@
         viewModel.progress_handled(handled);
         viewModel.progress_progress(progress);
         viewModel.progress_speed(speed);
+        setPaddingTop();
     }
 
     function setRunningState(value) {
         viewModel.running(value);
+        setPaddingTop();
     }
+
+    function setPaddingTop() {
+        var main = document.getElementById("app");
+        var mainHeight = main.clientHeight;
+        var mainPanel = document.getElementById("main-panel");
+        var panelHeight = mainPanel.clientHeight;
+        viewModel.panelHeight((mainHeight - panelHeight) / 2 + 'px');
+    }
+    setPaddingTop();
 </script>
