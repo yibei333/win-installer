@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Net;
-using System.Net.Http;
+using System.Text;
 
 namespace WinInstaller.Updater.Engine;
 
@@ -8,8 +8,13 @@ public static class HttpHelper
 {
     public static async Task<string> Get(string url)
     {
-        using var client = new HttpClient();
-        return await client.GetStringAsync(url);
+        var request = WebRequest.Create(url);
+        var response = await request.GetResponseAsync();
+        using var stream = response.GetResponseStream();
+        using var targetStream = new MemoryStream();
+        stream.CopyTo(targetStream);
+        var text = Encoding.UTF8.GetString(targetStream.ToArray());
+        return text;
     }
 
     public static async Task Download(string url, string savePath, Action<ProgressModel> progress, CancellationToken cancellationToken)

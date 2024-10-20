@@ -129,4 +129,17 @@
         viewModel.panelHeight((mainHeight - panelHeight) / 2 + 'px');
     }
     setPaddingTop();
+
+    window.addEventListener('mousewheel', function (event) {
+        if (event.ctrlKey === true || event.metaKey) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+
+    //firefox
+    window.addEventListener('DOMMouseScroll', function (event) {
+        if (event.ctrlKey === true || event.metaKey) {
+            event.preventDefault();
+        }
+    }, { passive: false });
 </script>
