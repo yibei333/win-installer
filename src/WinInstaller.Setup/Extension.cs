@@ -1,19 +1,58 @@
-﻿using SharpDevLib;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
+using WinInstaller.Setup.Engine;
 
-namespace WinInstaller.Setup.Extensions;
+namespace WinInstaller.Setup;
 
-public static class ShortcutExtension
+public static class Extension
 {
-    public static string CreateShortcutToDesktop(string directory)
+    public static string FormatPath(this string path)
     {
-        string app = directory.CombinePath(App.EntryPoint);
-        string targetPath = directory.CombinePath($"{App.Name}.lnk");
-        Create(targetPath, app, null, App.Name, "Ctrl+Shift+N");
-        return targetPath;
+        return path.Replace("\\", "/").Trim();
     }
 
+    //public static string SelectPath()
+    //{
+    //    var dialog = new System.Windows.Forms.FolderBrowserDialog { Description = "选择安装位置" };
+    //    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+    //    {
+    //        var path = dialog.SelectedPath.FormatPath().TrimEnd("/");
+    //        if (!path.EndsWith(App.Name)) path = path.CombinePath(App.Name);
+    //        Location = path;
+    //    }
+    //}
+
+    //unzip
+
+    public static bool StopRunningApp()
+    {
+        var name = new FileInfo(App.CurrentInstance.Config.EntryPoint).Name;
+        var exePath = Path.Combine(App.CurrentInstance.Config.InstallLocation, App.CurrentInstance.Config.EntryPoint).FormatPath();
+        var processes = Process.GetProcessesByName(name).Where(x => x.MainModule.FileName.FormatPath() == exePath).ToList();
+        if (!processes.Any()) return true;
+
+        if (MessageBox.Show("确定停止正在运行的程序?", "消息确认", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+        {
+            foreach (var process in processes)
+            {
+                process.Kill();
+                process.WaitForExit();
+                process.Dispose();
+            }
+            return true;
+        }
+        else return false;
+    }
+
+    public static string CreateShortcut(string directory)
+    {
+        string app = Path.Combine(directory, App.CurrentInstance.Config.EntryPoint);
+        string targetPath = Path.Combine(directory, $"{App.CurrentInstance.Config.DisplayName}.lnk");
+        Create(targetPath, app, null, App.CurrentInstance.Config.DisplayName, "Ctrl+Shift+N");
+        return targetPath;
+    }
 
     [ComImport, TypeLibType(0x1040), Guid("F935DC23-1CF0-11D0-ADB9-00C04FD58A0B")]
     interface IWshShortcut
@@ -36,7 +75,7 @@ public static class ShortcutExtension
         int WindowStyle { [DispId(0x3ee)] get; [param: In][DispId(0x3ee)] set; }
         [DispId(0x3ef)]
         string WorkingDirectory { [return: MarshalAs(UnmanagedType.BStr)][DispId(0x3ef)] get; [param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3ef)] set; }
-        [TypeLibFunc((short)0x40), DispId(0x7d0)]
+        [TypeLibFunc(0x40), DispId(0x7d0)]
         void Load([In, MarshalAs(UnmanagedType.BStr)] string PathLink);
         [DispId(0x7d1)]
         void Save();

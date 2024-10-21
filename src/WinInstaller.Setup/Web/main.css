@@ -1,0 +1,58 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+html,
+body,
+div,
+button {
+    user-select: none;
+    -webkit-user-select: none;
+    /* Chrome, Safari, Opera */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.item {
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item h6 {
+    margin: 0;
+}
+
+.operations {
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-bar {
+    padding: 6px;
+}
+
+.progress-bar .statics {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.m-0-6 {
+    margin: 0 6px;
+}

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WinInstaller.Uninstaller.Engine;
+namespace WinInstaller.Setup.Engine;
 
 public class App : Application
 {
@@ -32,7 +32,7 @@ public class App : Application
         {
             SizeToContent = SizeToContent.WidthAndHeight,
             ResizeMode = ResizeMode.NoResize,
-            Title = $"{Config.DisplayName}-卸载程序",
+            Title = $"{Config.DisplayName}-{Config.DisplayVersion}-安装程序",
             WindowStartupLocation = WindowStartupLocation.CenterScreen
         };
         window.Closing += (s, e) =>

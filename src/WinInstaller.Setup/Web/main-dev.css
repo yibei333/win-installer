@@ -1,0 +1,16 @@
+html {
+    background: #dadee4;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #eee;
+}
+
+.main {
+    height: 250px;
+    width: 500px;
+    background: white;
+}

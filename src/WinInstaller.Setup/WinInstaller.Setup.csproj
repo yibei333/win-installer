@@ -8,41 +8,21 @@
 		<LangVersion>10</LangVersion>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
 		<AssemblyName>Setup</AssemblyName>
+		<DebugType>none</DebugType>
+		<GenerateSupportedRuntime>False</GenerateSupportedRuntime>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Source.zip">
+		<EmbeddedResource Include="Web\**\*">
 			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
 		</EmbeddedResource>
-		<EmbeddedResource Include="PreRequests\**\*">
+
+		<EmbeddedResource Include="ReleaseResource\**\*">
 			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
 		</EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-		<PackageReference Include="HandyControl" Version="3.5.1" />
-		<PackageReference Include="SharpDevLib" Version="2.0.0" />
-		<PackageReference Include="SharpDevLib.Compression" Version="2.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="System.Windows.Forms" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Resource Include="favicon.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Update="Pages\CompletePage.xaml.cs">
-			<SubType>Code</SubType>
-		</Compile>
-		<Compile Update="Pages\InstallPage.xaml.cs">
-			<SubType>Code</SubType>
-		</Compile>
-		<Compile Update="Pages\PreRequestPage.xaml.cs">
-			<SubType>Code</SubType>
-		</Compile>
 	</ItemGroup>
 </Project>
