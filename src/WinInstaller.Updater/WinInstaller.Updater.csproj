@@ -21,4 +21,14 @@
 			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Web\main-external.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Web\main-external.js">
+	    <LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+	  </EmbeddedResource>
+	</ItemGroup>
 </Project>

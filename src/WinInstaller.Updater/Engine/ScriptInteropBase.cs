@@ -24,14 +24,15 @@ public abstract class ScriptInteropBase
         builder.AppendLine(LoadResource("lib.js"));
         builder.AppendLine(LoadResource("lib.css"));
         builder.AppendLine(LoadResource("main.css"));
+        builder.AppendLine(LoadResource("main-external.js"));
         builder.AppendLine(LoadResource("main.js"));
         var html = LoadResource("main.html");
         html = html.Replace("<link rel=\"stylesheet\" href=\"lib.css\" />", "");
         html = html.Replace("<link rel=\"stylesheet\" href=\"main.css\" />", "");
         html = html.Replace("<link rel=\"stylesheet\" href=\"main-dev.css\" />", "");
         html = html.Replace("<script src=\"lib.js\"></script>", "");
+        html = html.Replace("<script src=\"main-external-dev.js\"></script>", "");
         html = html.Replace("<script src=\"main.js\"></script>", "");
-        html = html.Replace("<script src=\"main-dev.js\"></script>", "");
         builder.AppendLine(html);
         builder.AppendLine("</body>");
         builder.AppendLine("</html>");
@@ -48,7 +49,12 @@ public abstract class ScriptInteropBase
             if (extension == ".js")
             {
                 builder.AppendLine("<script>");
+                builder.AppendLine("try{");
                 builder.AppendLine(content);
+                builder.AppendLine("}");
+                builder.AppendLine("catch(e){");
+                builder.AppendLine("window.external.HandleScriptError(e);");
+                builder.AppendLine("}");
                 builder.AppendLine("</script>");
                 return builder.ToString();
             }
@@ -66,11 +72,16 @@ public abstract class ScriptInteropBase
         }
         catch (Exception ex)
         {
-#if DEBUG
             MessageBox.Show(ex.Message);
-#endif
             Debug.WriteLine(ex.StackTrace);
+            Environment.Exit(0);
+            return null;
         }
-        return "错误";
+    }
+
+    public void HandleScriptError(string error)
+    {
+        MessageBox.Show(error);
+        Environment.Exit(0);
     }
 }

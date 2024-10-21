@@ -67,7 +67,7 @@ public class App : Application
 
         //navigate
         WebBrowser.NavigateToString(scriptInterop.BuildHtml());
-
+       
         Current.MainWindow.Content = WebBrowser;
     }
 }
